@@ -6,11 +6,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/movie_randomizer_dev
     username: admin
     password: admin
-    jpa:
-        hibernate:
-            ddl-auto: update
-        show-sql: true
     driver-class-name: org.postgresql.Driver
-
+  jpa:
+    hibernate:
+      ddl-auto: update
 server:
   port: 8080
