@@ -6,10 +6,7 @@ import com.dreamdev.apps.movierandomizer.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -52,5 +49,16 @@ public class MovieController {
         return movieNotFoundResponse();
     }
 
-
+    @PostMapping("/add")
+    public ResponseEntity<?> addMovie(@RequestBody Movie movie) {
+        if (movie.getTitle() == null || movie.getTitle().isEmpty()) {
+            return ResponseEntity.badRequest().body("Movie title is required");
+        }
+        Movie savedMovie = movieService.addMovieService(movie);
+        if(savedMovie!= null) {
+            return ResponseEntity.ok(savedMovie);
+        }
+        log.error("Failed to add movie: {}", movie);
+        return ResponseEntity.badRequest().body("Failed to add movie");
+    }
 }

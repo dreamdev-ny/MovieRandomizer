@@ -62,4 +62,23 @@ public class MovieService {
             return null;
         }
     }
+
+
+    public Movie addMovieService(Movie movie) {
+        if (movie != null) {
+            try{
+                if(movie.getGenres().size()>0){
+                    movie.getGenres().stream().forEach(g-> {
+                        g.setGenreId(MovieGenres.valueOf(g.getName().toUpperCase()).getGenreId());
+                    });
+                }
+            }catch (Exception e){
+                log.error("Error while adding movie: {}", e.getMessage());
+                return null;
+            }
+            return movieRepo.save(movie);
+        }
+        log.error("Movie cannot be null");
+        return null;
+    }
 }
