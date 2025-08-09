@@ -2,6 +2,7 @@ package com.dreamdev.apps.movierandomizer.controller;
 
 import com.dreamdev.apps.movierandomizer.entity.Movie;
 import com.dreamdev.apps.movierandomizer.repository.MovieRepo;
+import com.dreamdev.apps.movierandomizer.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,32 +19,38 @@ import java.util.Optional;
 @RequestMapping("/api/v1/movies")
 public class MovieController {
     private final MovieRepo movieRepo;
+    private final MovieService movieService;
+
+    private ResponseEntity<String> movieNotFoundResponse() {
+        return ResponseEntity.badRequest().body("Movie not found");
+    }
 
     @GetMapping("/randomMovie")
     public ResponseEntity<?> getRandomMovie() {
-        // Logic to fetch a random movie from the database
-        // For now, returning a placeholder response
-        int totalMovies = (int) movieRepo.count();
-
-//        get a random int between 1 and totalMovies
-        long randomIndex = ((int) (Math.random() * totalMovies) + 1);
-
-        Optional<Movie> foundMovieOptional = movieRepo.findById(randomIndex);
-        if (foundMovieOptional.isPresent()) {
-            return ResponseEntity.ok(foundMovieOptional.get());
+        Movie foundRandomMovie = movieService.getRandomMovieService();
+        if(foundRandomMovie!=null) {
+            return ResponseEntity.ok(foundRandomMovie);
         }
-        log.error("Movie with ID {} not found", randomIndex);
-        return ResponseEntity.badRequest().body("Movie not found");
+        return movieNotFoundResponse();
+    }
+
+    @GetMapping("/randomMovieByGenre/{genre}")
+    public ResponseEntity<?> getRandomMovieByGenre(@PathVariable String genre) {
+        Movie foundRandomMovieByGenre = movieService.getRandomMovieByGenreService(genre);
+        if(foundRandomMovieByGenre != null) {
+            return ResponseEntity.ok(foundRandomMovieByGenre);
+        }
+        return movieNotFoundResponse();
     }
 
     @GetMapping("/{movieId}")
     public ResponseEntity<?> getMovieById(@PathVariable Long movieId) {
-        Optional<Movie> foundMovieOptional = movieRepo.findById(movieId);
-        if (foundMovieOptional.isPresent()) {
-            return ResponseEntity.ok(foundMovieOptional.get());
+        Movie foundMovie = movieService.getMovieByIdService(movieId);
+        if(foundMovie != null) {
+            return ResponseEntity.ok(foundMovie);
         }
-        log.error("Movie with ID {} not found", movieId);
-        return ResponseEntity.badRequest().body("Movie not found");
+        return movieNotFoundResponse();
     }
+
 
 }
