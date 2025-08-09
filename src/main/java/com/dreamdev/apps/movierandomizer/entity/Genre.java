@@ -8,12 +8,12 @@ import jakarta.persistence.Id;
 import lombok.Data;
 
 @Data
-@Entity(name = "genres")
-public class Genres {
+@Entity(name = "genre")
+public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("genres_id")
-    private Long GenresId;
+    @JsonProperty("genre_id")
+    private Integer genreId;
 
     private String name;
 }

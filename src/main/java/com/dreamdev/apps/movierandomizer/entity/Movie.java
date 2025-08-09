@@ -3,6 +3,7 @@ package com.dreamdev.apps.movierandomizer.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
 
 import java.time.Instant;
 import java.util.List;
@@ -20,8 +21,13 @@ public class Movie {
     private String description;
     private int year;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    List<Genres> genres;
+    @ManyToMany
+    @JoinTable(
+            name = "movie_genre",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    List<Genre> genres;
 
     @JsonProperty("created_at")
     private Instant createdAt = Instant.now();
