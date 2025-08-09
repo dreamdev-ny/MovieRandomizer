@@ -21,6 +21,15 @@ public class Movie {
     private String description;
     private int year;
 
+    @JsonProperty("poster_url")
+    private String posterUrl;
+
+    @JsonProperty("trailer_url")
+    private String trailerUrl;
+
+    @JsonProperty("imdb_url")
+    private String imdbUrl;
+
     @ManyToMany
     @JoinTable(
             name = "movie_genre",
